@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { categories } from "./categories"; // ✅ FIXED
+import { categories } from "./Categories"; // ✅ FIXED
 
 const CategorySlider = () => {
   const navigate = useNavigate();
