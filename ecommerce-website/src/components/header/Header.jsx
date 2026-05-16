@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import Search from "../Search/Search";
+import Search from "../search/Search";
 
 import { IoGitCompareOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
