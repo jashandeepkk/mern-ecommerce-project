@@ -6,24 +6,21 @@ import Header from "./components/header/Header";
 import Navigation from "./components/navigation/Navigation";
 
 
-import Home from "./Pages/Home";
-import Help from "./Pages/Help";
-import Track from "./Pages/Track";
-import Login from "./Pages/Login";
-import Register from "./Pages/Register";
-import SearchResults from "./Pages/SearchResults";
-import CategoryPage from "./Pages/CategoryPage";
-import Compare from "./Pages/Compare";
-import Wishlist from "./Pages/Wishlist";
-import Cart from "./Pages/Cart";
-import ProductDetails from "./components/product/ProductDetails";
-import BlogDetails from "./pages/BlogDetails";
-import Checkout from "./Pages/Checkout";
-import Success from "./Pages/Success";
-import Orders from "./Pages/Orders";
-import Vendor from "./Pages/Vendor";
-import Admin from "./Pages/Admin";
-
+import Home from "./pages/Home";
+import Help from "./pages/Help";
+import Track from "./pages/Track";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import SearchResults from "./pages/SearchResults";
+import CategoryPage from "./pages/CategoryPage";
+import Compare from "./pages/Compare";
+import Wishlist from "./pages/Wishlist";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Success from "./pages/Success";
+import Orders from "./pages/Orders";
+import Vendor from "./pages/Vendor";
+import Admin from "./pages/Admin";
 
 import { Toaster } from "react-hot-toast";
 
