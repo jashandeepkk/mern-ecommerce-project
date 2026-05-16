@@ -27,7 +27,7 @@ const Track = () => {
     }
 
     const response = await fetch(
-      `http://localhost:5000/api/orders/${orderId}`,
+      `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -358,7 +358,7 @@ const Track = () => {
                                   "data:image"
                                 )
                                 ? item.image
-                                : `http://localhost:5000/${item.image}`
+                                : `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/${item.image}`
                               : "https://dummyimage.com/80x80/cccccc/000000&text=No+Image"
                           }
                           alt={item.name}

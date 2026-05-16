@@ -70,7 +70,7 @@ const Vendor = () => {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/products/vendor",
+        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products/vendor",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const Vendor = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/orders/vendor",
+        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders/vendor",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -193,7 +193,7 @@ const handleImageUpload = (files) => {
 
       if (editingId) {
         await fetch(
-          `http://localhost:5000/api/products/${editingId}`,
+          `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products/${editingId}`,
           {
             method: "PUT",
             headers: {
@@ -205,7 +205,7 @@ const handleImageUpload = (files) => {
         );
       } else {
         await fetch(
-          "http://localhost:5000/api/products",
+          "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products",
           {
             method: "POST",
             headers: {
@@ -238,7 +238,7 @@ const handleImageUpload = (files) => {
   const handleDelete = async (id) => {
     try {
       await fetch(
-        `http://localhost:5000/api/products/${id}`,
+        `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products/${id}`,
         {
           method: "DELETE",
           headers: {

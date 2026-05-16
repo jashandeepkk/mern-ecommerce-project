@@ -19,7 +19,7 @@ const Orders = () => {
         localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:5000/api/orders",
+        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders",
         {
           headers: {
             Authorization: `Bearer ${token}`,

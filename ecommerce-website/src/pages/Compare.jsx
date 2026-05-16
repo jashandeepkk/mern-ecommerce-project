@@ -224,7 +224,7 @@ const Compare = () => {
                             "data:image"
                           )
                           ? item.images[0]
-                          : `http://localhost:5000/${item.images[0]}`
+                          : `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/${item.images[0]}`
                         : "https://dummyimage.com/300x300/cccccc/000000&text=No+Image"
                     }
 

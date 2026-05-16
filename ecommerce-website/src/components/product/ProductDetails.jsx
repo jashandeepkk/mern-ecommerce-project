@@ -39,7 +39,7 @@ const ProductDetails = () => {
       return img;
     }
 
-    return `http://localhost:5000/${img}`;
+    return `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;
   };
 
   

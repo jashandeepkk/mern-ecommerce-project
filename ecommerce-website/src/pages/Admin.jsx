@@ -46,7 +46,7 @@ export default function Admin() {
         localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:5000/api/admin/dashboard",
+        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/admin/dashboard",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ export default function Admin() {
       localStorage.getItem("token");
 
     await fetch(
-      `http://localhost:5000/api/admin/user/${id}`,
+      `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/admin/user/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -98,7 +98,7 @@ export default function Admin() {
   localStorage.getItem("token");
 
 const response = await fetch(
-  `http://localhost:5000/api/admin/vendor/approve/${id}`,
+  `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/admin/vendor/approve/${id}`,
   {
     method: "PUT",
     headers: {

@@ -100,7 +100,7 @@ const Register = () => {
 
       const { data } =
         await axios.post(
-          "http://localhost:5000/api/auth/register",
+          "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/auth/register",
           {
             name,
             email,

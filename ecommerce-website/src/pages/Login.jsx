@@ -47,7 +47,7 @@ const Login = () => {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/login",
+        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/auth/login",
         {
           method: "POST",
 

@@ -135,7 +135,7 @@ flex flex-col overflow-hidden cursor-pointer"
       product.images?.[0]
         ? product.images[0].startsWith("data:image")
           ? product.images[0]
-          : `http://localhost:5000/${product.images[0]}`
+          : `https://mern-ecommerce-project-rtjp.onrender.com/${product.images[0]}`
         : "https://dummyimage.com/300x300/cccccc/000000&text=No+Image"
     }
     alt={product.name}

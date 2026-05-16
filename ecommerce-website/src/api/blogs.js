@@ -1,4 +1,4 @@
-const BLOG_API = "http://localhost:5000/api/blogs";
+const BLOG_API = "https://mern-ecommerce-project-rtjp.onrender.com";
 
 export const getBlogs = async () => {
   const res = await fetch(BLOG_API);
@@ -12,7 +12,7 @@ export const getBlogs = async () => {
     category: item.category,
     content: item.content,
 
-    image: `http://localhost:5000/${item.image}`,
+    image: `https://mern-ecommerce-project-rtjp.onrender.com/${item.image}`,
 
     date: "Latest",
   }));
@@ -29,7 +29,7 @@ export const getBlogById = async (id) => {
     category: item.category,
     content: item.content,
 
-    image: `http://localhost:5000/${item.image}`,
+    image: `https://mern-ecommerce-project-rtjp.onrender.com/${item.image}`,
 
     date: "Latest",
 
@@ -38,7 +38,7 @@ export const getBlogById = async (id) => {
         id: item._id,
         title: item.title,
         price: 999,
-        thumbnail: `http://localhost:5000/${item.image}`,
+        thumbnail: `https://mern-ecommerce-project-rtjp.onrender.com/${item.image}`,
       },
     ],
 

@@ -25,7 +25,7 @@ export const WishlistProvider = ({
     async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/wishlist/${userId}`
+          `https://mern-ecommerce-project-rtjp.onrender.com/api/wishlist/${userId}`
         );
 
         const data =
@@ -51,7 +51,7 @@ export const WishlistProvider = ({
       try {
 
         const res = await fetch(
-          "http://localhost:5000/api/wishlist/toggle",
+          "https://mern-ecommerce-project-rtjp.onrender.com/api/wishlist/toggle",
           {
             method: "POST",
 
