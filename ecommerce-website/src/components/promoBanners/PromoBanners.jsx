@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import banner1 from "../../assets/bannerWide1.png";
-import banner2 from "../../assets/bannerWide2.png";
+import banner1 from "../../assets/bannerwide1.png";
+import banner2 from "../../assets/bannerwide2.png";
 
 const PromoBanners = () => {
   const banners = [
