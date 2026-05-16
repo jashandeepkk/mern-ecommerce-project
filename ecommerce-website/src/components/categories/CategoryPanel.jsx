@@ -1,6 +1,6 @@
 import Drawer from "@mui/material/Drawer";
 import { useNavigate } from "react-router-dom";
-import { categories } from "./categories"; // ✅ FIXED
+import { categories } from "./Categories"; // ✅ FIXED
 
 const CategoryPanel = ({ open, setOpen }) => {
   const navigate = useNavigate();
