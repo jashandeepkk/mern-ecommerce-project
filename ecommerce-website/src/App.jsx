@@ -22,7 +22,7 @@ import Orders from "./pages/Orders";
 import Vendor from "./pages/Vendor";
 import Admin from "./pages/Admin";
 import BlogDetails from "./pages/BlogDetails";
-import ProductDetails from "./pages/ProductDetails";
+import ProductDetails from "./pages/product/ProductDetails";
 
 import { Toaster } from "react-hot-toast";
 
