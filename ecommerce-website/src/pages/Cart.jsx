@@ -2,8 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../components/context/CartContext";
 
-const Cart = () => {
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
 
+const Cart = () => {
   const navigate = useNavigate();
 
   const {
@@ -21,15 +23,12 @@ const Cart = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-5">
-
       <h2 className="text-3xl font-bold mb-6">
         Shopping Cart
       </h2>
 
       {cart.length === 0 ? (
-
         <div className="text-center mt-20">
-
           <p className="text-xl text-gray-500">
             Your cart is empty 🛒
           </p>
@@ -40,24 +39,19 @@ const Cart = () => {
           >
             Continue Shopping
           </button>
-
         </div>
-
       ) : (
-
         <div className="flex flex-col lg:flex-row gap-6">
-
           {/* LEFT */}
+
           <div className="flex-1 space-y-4">
-
             {cart.map((item) => (
-
               <div
                 key={item.productId}
                 className="flex flex-col sm:flex-row items-center gap-4 border rounded-2xl p-4 shadow-sm bg-white"
               >
-
                 {/* IMAGE */}
+
                 <img
                   src={
                     item.image
@@ -65,11 +59,13 @@ const Cart = () => {
                           "data:image"
                         )
                         ? item.image
-                        : `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/${item.image}`
+                        : `${BASE_URL}/${item.image}`
                       : "https://dummyimage.com/300x300/cccccc/000000&text=No+Image"
                   }
                   alt={item.title}
                   onError={(e) => {
+                    e.target.onerror = null;
+
                     e.target.src =
                       "https://dummyimage.com/300x300/cccccc/000000&text=No+Image";
                   }}
@@ -77,8 +73,8 @@ const Cart = () => {
                 />
 
                 {/* DETAILS */}
-                <div className="flex-1 w-full">
 
+                <div className="flex-1 w-full">
                   <h3 className="font-semibold text-lg">
                     {item.title}
                   </h3>
@@ -91,8 +87,8 @@ const Cart = () => {
                   </p>
 
                   {/* QTY */}
-                  <div className="flex items-center gap-3 mt-3">
 
+                  <div className="flex items-center gap-3 mt-3">
                     <button
                       onClick={() =>
                         updateQty(
@@ -120,14 +116,12 @@ const Cart = () => {
                     >
                       +
                     </button>
-
                   </div>
-
                 </div>
 
                 {/* PRICE */}
-                <div className="text-right">
 
+                <div className="text-right">
                   <p className="font-bold text-lg">
                     ₹
                     {(
@@ -146,20 +140,15 @@ const Cart = () => {
                   >
                     Remove
                   </button>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
 
           {/* RIGHT */}
+
           <div className="w-full lg:w-[320px]">
-
             <div className="border rounded-2xl p-5 shadow-sm bg-white sticky top-5">
-
               <h3 className="text-xl font-semibold mb-5">
                 Order Summary
               </h3>
@@ -175,7 +164,6 @@ const Cart = () => {
               </div>
 
               <div className="border-t pt-4 mt-4 flex justify-between font-bold text-lg">
-
                 <span>Total</span>
 
                 <span>
@@ -184,7 +172,6 @@ const Cart = () => {
                     totalPrice || 0
                   ).toLocaleString("en-IN")}
                 </span>
-
               </div>
 
               <button
@@ -196,13 +183,9 @@ const Cart = () => {
               >
                 Proceed To Checkout
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       )}
     </div>
   );

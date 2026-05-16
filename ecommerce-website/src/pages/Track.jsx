@@ -7,7 +7,8 @@ import {
   FaClock,
   FaCog,
 } from "react-icons/fa";
-
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
 const Track = () => {
   const [orderId, setOrderId] = useState("");
   const [order, setOrder] = useState(null);
@@ -27,7 +28,7 @@ const Track = () => {
     }
 
     const response = await fetch(
-      `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders/${orderId}`,
+  `${BASE_URL}/api/orders/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -357,9 +358,7 @@ const Track = () => {
                               ? item.image.startsWith(
                                   "data:image"
                                 )
-                                ? item.image
-                                : `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/${item.image}`
-                              : "https://dummyimage.com/80x80/cccccc/000000&text=No+Image"
+                               : `${BASE_URL}/${item.image}`
                           }
                           alt={item.name}
                           className="w-full h-full object-contain"

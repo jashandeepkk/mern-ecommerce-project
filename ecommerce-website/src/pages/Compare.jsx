@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
   FaHeart,
   FaEye,
@@ -8,18 +7,17 @@ import {
 import { IoGitCompareOutline } from "react-icons/io5";
 
 import toast from "react-hot-toast";
-
 import { useNavigate } from "react-router-dom";
 
-const Compare = () => {
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
 
-  const [products, setProducts] =
-    useState([]);
+const Compare = () => {
+  const [products, setProducts] = useState([]);
 
   const navigate = useNavigate();
 
   const loadCompare = () => {
-
     const data =
       JSON.parse(
         localStorage.getItem("compare")
@@ -29,7 +27,6 @@ const Compare = () => {
   };
 
   useEffect(() => {
-
     loadCompare();
 
     window.addEventListener(
@@ -43,7 +40,6 @@ const Compare = () => {
     );
 
     return () => {
-
       window.removeEventListener(
         "compareUpdated",
         loadCompare
@@ -54,11 +50,9 @@ const Compare = () => {
         loadCompare
       );
     };
-
   }, []);
 
   const removeCompare = (item) => {
-
     const updated = products.filter(
       (p) =>
         (p._id || p.id) !==
@@ -80,13 +74,10 @@ const Compare = () => {
   };
 
   return (
-
     <div className="max-w-7xl mx-auto px-4 py-8">
-
       {/* HEADER */}
 
       <div className="mb-8">
-
         <h2 className="text-4xl font-bold text-[#0B1A3A]">
           Compare Products
         </h2>
@@ -94,23 +85,17 @@ const Compare = () => {
         <p className="text-gray-500 mt-2">
           Compare your selected products
         </p>
-
       </div>
 
       {/* EMPTY */}
 
       {products.length === 0 ? (
-
         <div className="bg-white rounded-2xl shadow-md p-10 text-center">
-
           <p className="text-gray-500 text-lg">
             No products to compare
           </p>
-
         </div>
-
       ) : (
-
         <div
           className="
           grid grid-cols-2
@@ -121,16 +106,12 @@ const Compare = () => {
           gap-4
         "
         >
-
           {products.map((item) => {
-
             return (
-
               <div
                 key={
                   item._id || item.id
                 }
-
                 onClick={() =>
                   navigate(
                     `/product/${item._id}`,
@@ -139,7 +120,6 @@ const Compare = () => {
                     }
                   )
                 }
-
                 className="
                 group relative
                 bg-white rounded-xl
@@ -151,11 +131,9 @@ const Compare = () => {
                 cursor-pointer
               "
               >
-
                 {/* RIGHT ICONS */}
 
                 <div className="absolute top-3 right-3 flex flex-col gap-2 z-40">
-
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -167,7 +145,6 @@ const Compare = () => {
 
                   <button
                     onClick={(e) => {
-
                       e.stopPropagation();
 
                       navigate(
@@ -177,7 +154,6 @@ const Compare = () => {
                         }
                       );
                     }}
-
                     className="p-2 bg-white rounded-full shadow-md"
                   >
                     <FaEye size={13} />
@@ -185,21 +161,18 @@ const Compare = () => {
 
                   <button
                     onClick={(e) => {
-
                       e.stopPropagation();
 
                       removeCompare(
                         item
                       );
                     }}
-
                     className="p-2 bg-white rounded-full shadow-md"
                   >
                     <IoGitCompareOutline
                       size={15}
                     />
                   </button>
-
                 </div>
 
                 {/* IMAGE */}
@@ -214,34 +187,28 @@ const Compare = () => {
                   p-2
                 "
                 >
-
                   <img
                     loading="lazy"
-
                     src={
                       item.images?.[0]
                         ? item.images[0].startsWith(
                             "data:image"
                           )
                           ? item.images[0]
-                          : `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/${item.images[0]}`
+                          : `${BASE_URL}/${item.images[0]}`
                         : "https://dummyimage.com/300x300/cccccc/000000&text=No+Image"
                     }
-
                     alt={
                       item.name ||
                       item.title
                     }
-
                     onError={(e) => {
-
                       e.target.onerror =
                         null;
 
                       e.target.src =
                         "https://dummyimage.com/300x300/cccccc/000000&text=No+Image";
                     }}
-
                     className="
                     h-full
                     w-full
@@ -251,13 +218,11 @@ const Compare = () => {
                     group-hover:scale-105
                   "
                   />
-
                 </div>
 
                 {/* CONTENT */}
 
                 <div className="flex flex-col flex-grow p-2.5">
-
                   {/* CATEGORY */}
 
                   <p
@@ -291,18 +256,14 @@ const Compare = () => {
                   {/* BRAND */}
 
                   <p className="text-xs text-gray-500 mt-1">
-
                     {item.brand ||
                       "Vendor Product"}
-
                   </p>
 
                   {/* PRICE */}
 
                   <div className="mt-auto pt-3">
-
                     <div className="flex items-center gap-2">
-
                       <span
                         className="
                         font-bold
@@ -317,9 +278,7 @@ const Compare = () => {
                           "en-IN"
                         )}
                       </span>
-
                     </div>
-
                   </div>
 
                   {/* STOCK */}
@@ -334,7 +293,6 @@ const Compare = () => {
                         : "text-red-500"
                     }`}
                   >
-
                     {(
                       item.countInStock ||
                       item.stock
@@ -344,21 +302,18 @@ const Compare = () => {
                           item.stock
                         })`
                       : "Out of Stock"}
-
                   </p>
 
                   {/* BUTTON */}
 
                   <button
                     onClick={(e) => {
-
                       e.stopPropagation();
 
                       removeCompare(
                         item
                       );
                     }}
-
                     className="
                     mt-3
                     w-full
@@ -374,13 +329,10 @@ const Compare = () => {
                   >
                     Remove
                   </button>
-
                 </div>
-
               </div>
             );
           })}
-
         </div>
       )}
     </div>

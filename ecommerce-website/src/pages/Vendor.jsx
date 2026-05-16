@@ -6,18 +6,18 @@ import {
   Line,
   XAxis,
   YAxis,
-  Tooltip,
+ Tooltip,
   CartesianGrid,
   ResponsiveContainer,
   BarChart,
   Bar,
 } from "recharts";
+
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
+
 const categoryData = {
-  Fashion: [
-    "men",
-    "women",
-    "kids",
-  ],
+  Fashion: ["men", "women", "kids"],
 
   Electronics: [
     "mobiles",
@@ -25,15 +25,9 @@ const categoryData = {
     "accessories",
   ],
 
-  Bags: [
-    "backpacks",
-    "handbags",
-  ],
+  Bags: ["backpacks", "handbags"],
 
-  Footwear: [
-    "sports",
-    "casual",
-  ],
+  Footwear: ["sports", "casual"],
 
   Groceries: [
     "fresh-fruits",
@@ -45,32 +39,34 @@ const categoryData = {
     "fragrances",
   ],
 
-  Jewellery: [
-    "necklaces",
-    "rings",
-  ],
+  Jewellery: ["necklaces", "rings"],
 };
 
 const Vendor = () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = JSON.parse(
+    localStorage.getItem("currentUser")
+  );
+
   const token = localStorage.getItem("token");
 
   const [form, setForm] = useState({
-  title: "",
-  price: "",
-  images: [],
-  category: "",
-  subCategory: "",
-});
+    title: "",
+    price: "",
+    images: [],
+    category: "",
+    subCategory: "",
+  });
 
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] =
+    useState(null);
 
+  // FETCH PRODUCTS
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products/vendor",
+        `${BASE_URL}/api/products/vendor`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,10 +83,11 @@ const Vendor = () => {
     }
   };
 
+  // FETCH ORDERS
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders/vendor",
+        `${BASE_URL}/api/orders/vendor`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,13 +104,14 @@ const Vendor = () => {
     }
   };
 
- useEffect(() => {
-  if (token) {
-    fetchProducts();
-    fetchOrders();
-  }
-}, [token]);
- 
+  useEffect(() => {
+    if (token) {
+      fetchProducts();
+      fetchOrders();
+    }
+  }, [token]);
+
+  // HANDLE INPUT
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -121,32 +119,40 @@ const Vendor = () => {
     });
   };
 
-const handleImageUpload = (files) => {
-  const imagePromises = files.map((file) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
+  // IMAGE UPLOAD
+  const handleImageUpload = (files) => {
+    const imagePromises = files.map(
+      (file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
 
-      reader.onloadend = () => {
-        resolve(reader.result);
-      };
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
 
-      reader.readAsDataURL(file);
-    });
-  });
+          reader.readAsDataURL(file);
+        });
+      }
+    );
 
-  Promise.all(imagePromises).then((images) => {
-    setForm((prev) => ({
-      ...prev,
-      images: [...prev.images, ...images],
-    }));
-  });
-};
+    Promise.all(imagePromises).then(
+      (images) => {
+        setForm((prev) => ({
+          ...prev,
+          images: [
+            ...prev.images,
+            ...images,
+          ],
+        }));
+      }
+    );
+  };
 
   const onDrop = (acceptedFiles) => {
-  if (acceptedFiles.length > 0) {
-    handleImageUpload(acceptedFiles);
-  }
-};
+    if (acceptedFiles.length > 0) {
+      handleImageUpload(acceptedFiles);
+    }
+  };
 
   const {
     getRootProps,
@@ -160,59 +166,73 @@ const handleImageUpload = (files) => {
     multiple: true,
   });
 
+  // ADD / UPDATE PRODUCT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
-  !form.title ||
-  !form.price ||
-  form.images.length === 0 ||
-  !form.category ||
-  !form.subCategory
-) {
-  alert("Please fill all fields");
-
-  return;
-}
+      !form.title ||
+      !form.price ||
+      form.images.length === 0 ||
+      !form.category ||
+      !form.subCategory
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
 
     try {
       const productData = {
-  name: form.title,
-  description: form.subCategory,
-  price: Number(form.price),
+        name: form.title,
+        description: form.subCategory,
+        price: Number(form.price),
 
-  category: form.category.toLowerCase(),
-  subCategory: form.subCategory.toLowerCase(),
+        category:
+          form.category.toLowerCase(),
 
-  images: form.images,
+        subCategory:
+          form.subCategory.toLowerCase(),
 
-  brand: "Vendor Product",
+        images: form.images,
 
-  countInStock: 10,
-};
+        brand: "Vendor Product",
+
+        countInStock: 10,
+      };
 
       if (editingId) {
         await fetch(
-          `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products/${editingId}`,
+          `${BASE_URL}/api/products/${editingId}`,
           {
             method: "PUT",
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type":
+                "application/json",
+
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(productData),
+
+            body: JSON.stringify(
+              productData
+            ),
           }
         );
       } else {
         await fetch(
-          "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products",
+          `${BASE_URL}/api/products`,
           {
             method: "POST",
+
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type":
+                "application/json",
+
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(productData),
+
+            body: JSON.stringify(
+              productData
+            ),
           }
         );
       }
@@ -220,27 +240,32 @@ const handleImageUpload = (files) => {
       fetchProducts();
 
       setForm({
-  title: "",
-  price: "",
-  images: [],
-  category: "",
-  subCategory: "",
-});
+        title: "",
+        price: "",
+        images: [],
+        category: "",
+        subCategory: "",
+      });
+
       setEditingId(null);
 
-      alert("Product Saved Successfully");
+      alert(
+        "Product Saved Successfully"
+      );
     } catch (error) {
       console.log(error);
       alert("Something went wrong");
     }
   };
 
+  // DELETE PRODUCT
   const handleDelete = async (id) => {
     try {
       await fetch(
-        `eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/products/${id}`,
+        `${BASE_URL}/api/products/${id}`,
         {
           method: "DELETE",
+
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -253,6 +278,7 @@ const handleImageUpload = (files) => {
     }
   };
 
+  // EDIT PRODUCT
   const handleEdit = (product) => {
     setEditingId(product._id);
 
@@ -261,27 +287,38 @@ const handleImageUpload = (files) => {
       price: product.price || "",
       images: product.images || [],
       category: product.category || "",
-      subCategory: product.subCategory || "",
+      subCategory:
+        product.subCategory || "",
     });
   };
 
-  const totalEarnings = Array.isArray(orders)
-    ? orders.reduce(
-        (acc, order) => acc + (order.totalPrice || 0),
-        0
-      )
-    : 0;
+  // STATS
+  const totalEarnings =
+    Array.isArray(orders)
+      ? orders.reduce(
+          (acc, order) =>
+            acc + (order.totalPrice || 0),
+          0
+        )
+      : 0;
 
-  const earningsData = Array.isArray(orders)
-    ? orders.map((o) => ({
-        date: new Date(o.createdAt).toLocaleDateString(),
-        total: o.totalPrice || 0,
-      }))
-    : [];
+  const earningsData =
+    Array.isArray(orders)
+      ? orders.map((o) => ({
+          date: new Date(
+            o.createdAt
+          ).toLocaleDateString(),
+
+          total: o.totalPrice || 0,
+        }))
+      : [];
 
   const orderData = Array.isArray(orders)
     ? orders.map((o) => ({
-        date: new Date(o.createdAt).toLocaleDateString(),
+        date: new Date(
+          o.createdAt
+        ).toLocaleDateString(),
+
         count: 1,
       }))
     : [];
@@ -295,7 +332,6 @@ const handleImageUpload = (files) => {
       }}
     >
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <div className="mb-8">
           <h2 className="text-4xl font-bold text-gray-800">
@@ -309,7 +345,6 @@ const handleImageUpload = (files) => {
 
         {/* STATS */}
         <div className="grid md:grid-cols-3 gap-5 mb-8">
-
           <div className="bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-lg">
             <p className="text-gray-500 text-sm">
               Total Products
@@ -339,47 +374,6 @@ const handleImageUpload = (files) => {
               ₹{totalEarnings}
             </h3>
           </div>
-
-        </div>
-
-        {/* CHARTS */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-
-          <div className="bg-white/90 p-6 rounded-3xl shadow-lg">
-            <h3 className="font-semibold mb-4 text-lg">
-              Earnings Trend
-            </h3>
-
-            <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={earningsData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="total"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white/90 p-6 rounded-3xl shadow-lg">
-            <h3 className="font-semibold mb-4 text-lg">
-              Orders Trend
-            </h3>
-
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={orderData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
         </div>
 
         {/* PRODUCT FORM */}
@@ -387,14 +381,12 @@ const handleImageUpload = (files) => {
           onSubmit={handleSubmit}
           className="bg-white/90 backdrop-blur-xl p-6 rounded-3xl shadow-lg mb-8"
         >
-
           <h3 className="font-semibold text-xl mb-5">
             {editingId
               ? "Edit Product"
               : "Add Product"}
           </h3>
 
-          {/* PRODUCT NAME */}
           <input
             type="text"
             name="title"
@@ -404,7 +396,6 @@ const handleImageUpload = (files) => {
             onChange={handleChange}
           />
 
-          {/* PRICE */}
           <input
             type="number"
             name="price"
@@ -414,60 +405,59 @@ const handleImageUpload = (files) => {
             onChange={handleChange}
           />
 
-          {/* CATEGORY */}
-<select
-  name="category"
-  value={form.category}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      category: e.target.value,
-      subCategory: "",
-    })
-  }
-  className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
->
-  <option value="">
-    Select Category
-  </option>
+          <select
+            name="category"
+            value={form.category}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                category: e.target.value,
+                subCategory: "",
+              })
+            }
+            className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
+          >
+            <option value="">
+              Select Category
+            </option>
 
-  {Object.keys(categoryData).map(
-    (cat) => (
-      <option
-        key={cat}
-        value={cat}
-      >
-        {cat}
-      </option>
-    )
-  )}
-</select>
+            {Object.keys(
+              categoryData
+            ).map((cat) => (
+              <option
+                key={cat}
+                value={cat}
+              >
+                {cat}
+              </option>
+            ))}
+          </select>
 
-{/* SUB CATEGORY */}
-{form.category && (
-  <select
-    name="subCategory"
-    value={form.subCategory}
-    onChange={handleChange}
-    className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
-  >
-    <option value="">
-      Select Sub Category
-    </option>
+          {form.category && (
+            <select
+              name="subCategory"
+              value={form.subCategory}
+              onChange={handleChange}
+              className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
+            >
+              <option value="">
+                Select Sub Category
+              </option>
 
-    {categoryData[
-      form.category
-    ]?.map((sub) => (
-      <option
-        key={sub}
-        value={sub}
-      >
-        {sub}
-      </option>
-    ))}
-  </select>
-)}
-          {/* DRAG & DROP IMAGE */}
+              {categoryData[
+                form.category
+              ]?.map((sub) => (
+                <option
+                  key={sub}
+                  value={sub}
+                >
+                  {sub}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {/* IMAGE DROPZONE */}
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all
@@ -477,94 +467,92 @@ const handleImageUpload = (files) => {
                 : "border-gray-300 bg-gray-50"
             }`}
           >
+            <input
+              {...getInputProps()}
+            />
 
-            <input {...getInputProps()} />
+            {form.images.length > 0 ? (
+              <div>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {form.images.map(
+                    (img, index) => (
+                      <img
+                        key={index}
+                        src={img}
+                        alt=""
+                        className="h-28 w-28 object-cover rounded-2xl shadow-md border"
+                      />
+                    )
+                  )}
+                </div>
 
-          {form.images.length > 0 ? (
+                <p className="text-sm text-gray-600 mt-4">
+                  {
+                    form.images.length
+                  }{" "}
+                  Images Uploaded
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-lg font-semibold text-gray-700">
+                  Drag & Drop Product
+                  Images
+                </p>
 
-  <div>
-
-    <div className="flex flex-wrap gap-4 justify-center">
-
-      {form.images.map((img, index) => (
-        <img
-          key={index}
-          src={img}
-          alt=""
-          className="h-28 w-28 object-cover rounded-2xl shadow-md border"
-        />
-      ))}
-
-    </div>
-
-    <p className="text-sm text-gray-600 mt-4">
-      {form.images.length} Images Uploaded
-    </p>
-
-  </div>
-
-) : (
-
-  <div>
-
-    <p className="text-lg font-semibold text-gray-700">
-      Drag & Drop Product Images
-    </p>
-
-    <p className="text-sm text-gray-500 mt-2">
-      or click to browse
-    </p>
-
-  </div>
-
-)}
-
+                <p className="text-sm text-gray-500 mt-2">
+                  or click to browse
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* BUTTON */}
-          <button
-            className="mt-5 px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 text-white font-semibold"
-          >
+          <button className="mt-5 px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 text-white font-semibold">
             {editingId
               ? "Update Product"
               : "Add Product"}
           </button>
-
         </form>
 
         {/* PRODUCTS */}
         <div className="grid md:grid-cols-3 gap-5">
-
           {products.map((p) => (
             <div
               key={p._id}
               className="bg-white/90 backdrop-blur-xl p-4 rounded-3xl shadow-lg"
             >
-
               <img
-  src={
-    p.images?.[0] ||
-    "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
-  }
-  alt={p.name}
-  className="h-52 w-full object-cover rounded-2xl mb-4"
-/>
+                src={
+                  p.images?.[0] ||
+                  "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
+                }
+                alt={p.name}
+                className="h-52 w-full object-cover rounded-2xl mb-4"
+              />
 
               <h4 className="font-semibold text-lg">
                 {p.name}
               </h4>
 
-             <p className="text-gray-500 mb-1">
-  ₹{Number(p.price).toLocaleString("en-IN")}
-</p>
+              <p className="text-gray-500 mb-1">
+                ₹
+                {Number(
+                  p.price
+                ).toLocaleString(
+                  "en-IN"
+                )}
+              </p>
+
               <p className="text-sm text-gray-400 mb-4 capitalize">
-                {p.category} / {p.subCategory}
+                {p.category} /{" "}
+                {p.subCategory}
               </p>
 
               <div className="flex gap-3">
-
                 <button
-                  onClick={() => handleEdit(p)}
+                  onClick={() =>
+                    handleEdit(p)
+                  }
                   className="flex-1 py-2 rounded-xl bg-blue-100 text-blue-700"
                 >
                   Edit
@@ -578,14 +566,10 @@ const handleImageUpload = (files) => {
                 >
                   Delete
                 </button>
-
               </div>
-
             </div>
           ))}
-
         </div>
-
       </div>
     </div>
   );
