@@ -54,11 +54,11 @@ const Track = () => {
         return;
       }
 
-      if (data && data._id) {
-        setOrder(data);
-      } else {
-        setError("No order found");
-      }
+      if (data.success && data.order) {
+  setOrder(data.order);
+} else {
+  setError("No order found");
+}
 
     } catch (err) {
       console.log(err);
