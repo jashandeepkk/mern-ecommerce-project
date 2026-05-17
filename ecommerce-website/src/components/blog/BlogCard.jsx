@@ -22,9 +22,10 @@ const BlogCard = ({ blog }) => {
     src={blog.image}
     alt={blog.title}
     onError={(e) => {
-      e.target.src =
-        "https://via.placeholder.com/400x250?text=No+Image";
-    }}
+  e.target.onerror = null;
+  e.target.src =
+    "https://dummyimage.com/400x250/cccccc/000000&text=No+Image";
+}}
     className="w-full h-full object-contain group-hover:scale-105 transition duration-500"
   />
 

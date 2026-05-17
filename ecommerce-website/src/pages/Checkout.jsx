@@ -29,7 +29,7 @@ useEffect(() => {
       }
 
       const response = await fetch(
-        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/cart",
+        "return `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/cart",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -165,7 +165,7 @@ useEffect(() => {
       };
 
       const response = await fetch(
-        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders",
+        "return `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/orders",
         {
           method: "POST",
 
@@ -201,7 +201,7 @@ useEffect(() => {
       );
 
       await fetch(
-        "eturn `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/cart/clear",
+        "return `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/cart/clear",
         {
           method: "DELETE",
 
