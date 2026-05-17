@@ -1,5 +1,6 @@
 import React from "react";
-
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
 import { useNavigate } from "react-router-dom";
 
 const BlogCard = ({ blog }) => {
@@ -10,7 +11,7 @@ const BlogCard = ({ blog }) => {
   return (
     <div
       onClick={() =>
-  navigate(`/blog/${blog._id}`)
+ navigate(`/blog/${blog._id}`)
 }
       className="group cursor-pointer bg-white rounded-2xl border border-gray-100 hover:shadow-lg transition duration-300 overflow-hidden"
     >
@@ -19,11 +20,11 @@ const BlogCard = ({ blog }) => {
       <div className="relative h-[250px] bg-gray-100 flex items-center justify-center overflow-hidden">
 
   <img
-  src={
-    blog.image?.startsWith("http")
-      ? blog.image
-      : `https://mern-ecommerce-project-rtjp.onrender.com${blog.image}`
-  }
+ src={
+  blog.image?.startsWith("http")
+    ? blog.image
+    : `${BASE_URL}/${blog.image}`
+}
   alt={blog.title}
   onError={(e) => {
     e.target.onerror = null;
