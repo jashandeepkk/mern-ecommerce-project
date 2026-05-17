@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
+import fs from "fs";
 import path from "path";
 import connectDB from "./config/db.js";
 
@@ -31,6 +31,9 @@ app.use(
 );
 
 connectDB();
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
