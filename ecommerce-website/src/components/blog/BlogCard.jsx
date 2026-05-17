@@ -10,7 +10,7 @@ const BlogCard = ({ blog }) => {
   return (
     <div
       onClick={() =>
-  navigate(`/blog/${blog.id}`)
+  navigate(`/blog/${blog._id}`)
 }
       className="group cursor-pointer bg-white rounded-2xl border border-gray-100 hover:shadow-lg transition duration-300 overflow-hidden"
     >
@@ -19,15 +19,19 @@ const BlogCard = ({ blog }) => {
       <div className="relative h-[250px] bg-gray-100 flex items-center justify-center overflow-hidden">
 
   <img
-    src={`https://mern-ecommerce-project-rtjp.onrender.com/${blog.image}`}
-    alt={blog.title}
-    onError={(e) => {
-  e.target.onerror = null;
-  e.target.src =
-    "https://dummyimage.com/400x250/cccccc/000000&text=No+Image";
-}}
-    className="w-full h-full object-contain group-hover:scale-105 transition duration-500"
-  />
+  src={
+    blog.image?.startsWith("http")
+      ? blog.image
+      : `https://mern-ecommerce-project-rtjp.onrender.com${blog.image}`
+  }
+  alt={blog.title}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src =
+      "https://dummyimage.com/400x250/cccccc/000000&text=No+Image";
+  }}
+  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+/>
 
   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition"></div>
 
