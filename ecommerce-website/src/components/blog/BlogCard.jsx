@@ -19,7 +19,7 @@ const BlogCard = ({ blog }) => {
       <div className="relative h-[250px] bg-gray-100 flex items-center justify-center overflow-hidden">
 
   <img
-    src={blog.image}
+    src={`https://mern-ecommerce-project-rtjp.onrender.com/${blog.image}`}
     alt={blog.title}
     onError={(e) => {
   e.target.onerror = null;
