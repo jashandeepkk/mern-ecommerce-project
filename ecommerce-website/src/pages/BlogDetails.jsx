@@ -20,10 +20,10 @@ const BlogDetails = () => {
 
         const blogs = await getBlogs();
         setRelated(
-          blogs
-            .filter((b) => b.id !== id)
-            .slice(0, 4)
-        );
+  blogs
+    .filter((b) => String(b.id) !== String(id))
+    .slice(0, 4)
+);
 
       } catch (error) {
         console.log(error);
@@ -57,7 +57,9 @@ const BlogDetails = () => {
   src={
     blog.image?.startsWith("http")
       ? blog.image
-      : `${BASE_URL}${blog.image}`
+      : `${BASE_URL}/${blog.image
+          .replace(/^\/+/, "")
+          .replace(/^uploads/, "uploads")}`
   }
   alt={blog.title}
   className="w-full h-[300px] md:h-[420px] object-cover"
@@ -304,7 +306,9 @@ const BlogDetails = () => {
   src={
     r.image?.startsWith("http")
       ? r.image
-      : `${BASE_URL}${r.image}`
+      : `${BASE_URL}/${r.image
+          .replace(/^\/+/, "")
+          .replace(/^uploads/, "uploads")}`
   }
   alt={r.title}
   className="w-16 h-14 object-cover rounded-lg"
