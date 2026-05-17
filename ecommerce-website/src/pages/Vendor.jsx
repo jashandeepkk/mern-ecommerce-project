@@ -6,7 +6,7 @@ import {
   Line,
   XAxis,
   YAxis,
- Tooltip,
+  Tooltip,
   CartesianGrid,
   ResponsiveContainer,
   BarChart,
@@ -43,11 +43,13 @@ const categoryData = {
 };
 
 const Vendor = () => {
+
   const currentUser = JSON.parse(
     localStorage.getItem("currentUser")
   );
 
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   const [form, setForm] = useState({
     title: "",
@@ -57,14 +59,21 @@ const Vendor = () => {
     subCategory: "",
   });
 
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
+  const [products, setProducts] =
+    useState([]);
+
+  const [orders, setOrders] =
+    useState([]);
+
   const [editingId, setEditingId] =
     useState(null);
 
   // FETCH PRODUCTS
+
   const fetchProducts = async () => {
+
     try {
+
       const response = await fetch(
         `${BASE_URL}/api/products/vendor`,
         {
@@ -74,18 +83,29 @@ const Vendor = () => {
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      setProducts(Array.isArray(data) ? data : []);
+      setProducts(
+        Array.isArray(data)
+          ? data
+          : data.products || []
+      );
+
     } catch (error) {
+
       console.log(error);
+
       setProducts([]);
     }
   };
 
   // FETCH ORDERS
+
   const fetchOrders = async () => {
+
     try {
+
       const response = await fetch(
         `${BASE_URL}/api/orders/vendor`,
         {
@@ -95,50 +115,75 @@ const Vendor = () => {
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      setOrders(Array.isArray(data) ? data : []);
+      setOrders(
+        Array.isArray(data)
+          ? data
+          : data.orders || []
+      );
+
     } catch (error) {
+
       console.log(error);
+
       setOrders([]);
     }
   };
 
   useEffect(() => {
+
     if (token) {
+
       fetchProducts();
+
       fetchOrders();
     }
+
   }, [token]);
 
-  // HANDLE INPUT
+  // INPUT CHANGE
+
   const handleChange = (e) => {
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.value,
     });
   };
 
   // IMAGE UPLOAD
+
   const handleImageUpload = (files) => {
-    const imagePromises = files.map(
-      (file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
 
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
+    const imagePromises =
+      files.map((file) => {
 
-          reader.readAsDataURL(file);
-        });
-      }
-    );
+        return new Promise(
+          (resolve) => {
+
+            const reader =
+              new FileReader();
+
+            reader.onloadend = () => {
+              resolve(reader.result);
+            };
+
+            reader.readAsDataURL(
+              file
+            );
+          }
+        );
+      });
 
     Promise.all(imagePromises).then(
       (images) => {
+
         setForm((prev) => ({
           ...prev,
+
           images: [
             ...prev.images,
             ...images,
@@ -148,9 +193,17 @@ const Vendor = () => {
     );
   };
 
-  const onDrop = (acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      handleImageUpload(acceptedFiles);
+  const onDrop = (
+    acceptedFiles
+  ) => {
+
+    if (
+      acceptedFiles.length > 0
+    ) {
+
+      handleImageUpload(
+        acceptedFiles
+      );
     }
   };
 
@@ -160,14 +213,18 @@ const Vendor = () => {
     isDragActive,
   } = useDropzone({
     onDrop,
+
     accept: {
       "image/*": [],
     },
+
     multiple: true,
   });
 
   // ADD / UPDATE PRODUCT
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     if (
@@ -177,15 +234,25 @@ const Vendor = () => {
       !form.category ||
       !form.subCategory
     ) {
-      alert("Please fill all fields");
+
+      alert(
+        "Please fill all fields"
+      );
+
       return;
     }
 
     try {
+
       const productData = {
         name: form.title,
-        description: form.subCategory,
-        price: Number(form.price),
+
+        description:
+          form.subCategory,
+
+        price: Number(
+          form.price
+        ),
 
         category:
           form.category.toLowerCase(),
@@ -195,16 +262,21 @@ const Vendor = () => {
 
         images: form.images,
 
-        brand: "Vendor Product",
+        brand:
+          "Vendor Product",
 
         countInStock: 10,
       };
 
+      let response;
+
       if (editingId) {
-        await fetch(
+
+        response = await fetch(
           `${BASE_URL}/api/products/${editingId}`,
           {
             method: "PUT",
+
             headers: {
               "Content-Type":
                 "application/json",
@@ -217,8 +289,10 @@ const Vendor = () => {
             ),
           }
         );
+
       } else {
-        await fetch(
+
+        response = await fetch(
           `${BASE_URL}/api/products`,
           {
             method: "POST",
@@ -237,6 +311,19 @@ const Vendor = () => {
         );
       }
 
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        alert(
+          data.message ||
+            "Failed to save product"
+        );
+
+        return;
+      }
+
       fetchProducts();
 
       setForm({
@@ -252,16 +339,26 @@ const Vendor = () => {
       alert(
         "Product Saved Successfully"
       );
+
     } catch (error) {
+
       console.log(error);
-      alert("Something went wrong");
+
+      alert(
+        "Something went wrong"
+      );
     }
   };
 
   // DELETE PRODUCT
-  const handleDelete = async (id) => {
+
+  const handleDelete = async (
+    id
+  ) => {
+
     try {
-      await fetch(
+
+      const response = await fetch(
         `${BASE_URL}/api/products/${id}`,
         {
           method: "DELETE",
@@ -272,32 +369,65 @@ const Vendor = () => {
         }
       );
 
+      if (!response.ok) {
+
+        alert(
+          "Delete failed"
+        );
+
+        return;
+      }
+
       fetchProducts();
+
     } catch (error) {
+
       console.log(error);
     }
   };
 
   // EDIT PRODUCT
-  const handleEdit = (product) => {
-    setEditingId(product._id);
+
+  const handleEdit = (
+    product
+  ) => {
+
+    setEditingId(
+      product._id
+    );
 
     setForm({
-      title: product.name || "",
-      price: product.price || "",
-      images: product.images || [],
-      category: product.category || "",
+      title:
+        product.name || "",
+
+      price:
+        product.price || "",
+
+      images:
+        product.images || [],
+
+      category:
+        product.category || "",
+
       subCategory:
         product.subCategory || "",
+    });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
     });
   };
 
   // STATS
+
   const totalEarnings =
     Array.isArray(orders)
       ? orders.reduce(
           (acc, order) =>
-            acc + (order.totalPrice || 0),
+            acc +
+            (order.totalPrice ||
+              0),
           0
         )
       : 0;
@@ -309,19 +439,21 @@ const Vendor = () => {
             o.createdAt
           ).toLocaleDateString(),
 
-          total: o.totalPrice || 0,
+          total:
+            o.totalPrice || 0,
         }))
       : [];
 
-  const orderData = Array.isArray(orders)
-    ? orders.map((o) => ({
-        date: new Date(
-          o.createdAt
-        ).toLocaleDateString(),
+  const orderData =
+    Array.isArray(orders)
+      ? orders.map((o) => ({
+          date: new Date(
+            o.createdAt
+          ).toLocaleDateString(),
 
-        count: 1,
-      }))
-    : [];
+          count: 1,
+        }))
+      : [];
 
   return (
     <div
@@ -331,21 +463,30 @@ const Vendor = () => {
           "linear-gradient(135deg, #fff7ed 0%, #fdf2f8 35%, #eff6ff 70%, #ffffff 100%)",
       }}
     >
+
       <div className="max-w-7xl mx-auto">
+
         {/* HEADER */}
+
         <div className="mb-8">
+
           <h2 className="text-4xl font-bold text-gray-800">
             Vendor Dashboard
           </h2>
 
           <p className="text-gray-500 mt-2">
-            Welcome {currentUser?.name}
+            Welcome{" "}
+            {currentUser?.name}
           </p>
+
         </div>
 
         {/* STATS */}
+
         <div className="grid md:grid-cols-3 gap-5 mb-8">
+
           <div className="bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-lg">
+
             <p className="text-gray-500 text-sm">
               Total Products
             </p>
@@ -353,9 +494,11 @@ const Vendor = () => {
             <h3 className="text-3xl font-bold mt-2">
               {products.length}
             </h3>
+
           </div>
 
           <div className="bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-lg">
+
             <p className="text-gray-500 text-sm">
               Orders
             </p>
@@ -363,28 +506,117 @@ const Vendor = () => {
             <h3 className="text-3xl font-bold mt-2">
               {orders.length}
             </h3>
+
           </div>
 
           <div className="bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-lg">
+
             <p className="text-gray-500 text-sm">
               Earnings
             </p>
 
             <h3 className="text-3xl font-bold mt-2">
-              ₹{totalEarnings}
+              ₹
+              {Number(
+                totalEarnings
+              ).toLocaleString(
+                "en-IN"
+              )}
             </h3>
+
           </div>
+
+        </div>
+
+        {/* CHARTS */}
+
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+
+          <div className="bg-white p-6 rounded-3xl shadow-lg">
+
+            <h3 className="font-bold text-lg mb-5">
+              Earnings Overview
+            </h3>
+
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
+
+              <LineChart
+                data={earningsData}
+              >
+
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis dataKey="date" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Line
+                  type="monotone"
+                  dataKey="total"
+                  stroke="#8b5cf6"
+                  strokeWidth={3}
+                />
+
+              </LineChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-3xl shadow-lg">
+
+            <h3 className="font-bold text-lg mb-5">
+              Orders Overview
+            </h3>
+
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
+
+              <BarChart
+                data={orderData}
+              >
+
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis dataKey="date" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Bar
+                  dataKey="count"
+                  fill="#f59e0b"
+                />
+
+              </BarChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
         </div>
 
         {/* PRODUCT FORM */}
+
         <form
           onSubmit={handleSubmit}
           className="bg-white/90 backdrop-blur-xl p-6 rounded-3xl shadow-lg mb-8"
         >
+
           <h3 className="font-semibold text-xl mb-5">
+
             {editingId
               ? "Edit Product"
               : "Add Product"}
+
           </h3>
 
           <input
@@ -393,7 +625,9 @@ const Vendor = () => {
             placeholder="Product Name"
             className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
             value={form.title}
-            onChange={handleChange}
+            onChange={
+              handleChange
+            }
           />
 
           <input
@@ -402,7 +636,9 @@ const Vendor = () => {
             placeholder="Price"
             className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
             value={form.price}
-            onChange={handleChange}
+            onChange={
+              handleChange
+            }
           />
 
           <select
@@ -411,12 +647,14 @@ const Vendor = () => {
             onChange={(e) =>
               setForm({
                 ...form,
-                category: e.target.value,
+                category:
+                  e.target.value,
                 subCategory: "",
               })
             }
             className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
           >
+
             <option value="">
               Select Category
             </option>
@@ -424,22 +662,31 @@ const Vendor = () => {
             {Object.keys(
               categoryData
             ).map((cat) => (
+
               <option
                 key={cat}
                 value={cat}
               >
                 {cat}
               </option>
+
             ))}
+
           </select>
 
           {form.category && (
+
             <select
               name="subCategory"
-              value={form.subCategory}
-              onChange={handleChange}
+              value={
+                form.subCategory
+              }
+              onChange={
+                handleChange
+              }
               className="w-full mb-4 px-4 py-3 rounded-2xl border border-gray-200"
             >
+
               <option value="">
                 Select Sub Category
               </option>
@@ -447,108 +694,148 @@ const Vendor = () => {
               {categoryData[
                 form.category
               ]?.map((sub) => (
+
                 <option
                   key={sub}
                   value={sub}
                 >
                   {sub}
                 </option>
+
               ))}
+
             </select>
           )}
 
           {/* IMAGE DROPZONE */}
+
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all
-            ${
+            className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all ${
               isDragActive
                 ? "border-blue-500 bg-blue-50"
                 : "border-gray-300 bg-gray-50"
             }`}
           >
+
             <input
               {...getInputProps()}
             />
 
-            {form.images.length > 0 ? (
+            {form.images.length >
+            0 ? (
+
               <div>
+
                 <div className="flex flex-wrap gap-4 justify-center">
+
                   {form.images.map(
-                    (img, index) => (
+                    (
+                      img,
+                      index
+                    ) => (
+
                       <img
                         key={index}
                         src={img}
                         alt=""
                         className="h-28 w-28 object-cover rounded-2xl shadow-md border"
                       />
+
                     )
                   )}
+
                 </div>
 
                 <p className="text-sm text-gray-600 mt-4">
+
                   {
                     form.images.length
                   }{" "}
                   Images Uploaded
+
                 </p>
+
               </div>
+
             ) : (
+
               <div>
+
                 <p className="text-lg font-semibold text-gray-700">
-                  Drag & Drop Product
-                  Images
+                  Drag & Drop Product Images
                 </p>
 
                 <p className="text-sm text-gray-500 mt-2">
                   or click to browse
                 </p>
+
               </div>
             )}
+
           </div>
 
           <button className="mt-5 px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 text-white font-semibold">
+
             {editingId
               ? "Update Product"
               : "Add Product"}
+
           </button>
+
         </form>
 
         {/* PRODUCTS */}
+
         <div className="grid md:grid-cols-3 gap-5">
+
           {products.map((p) => (
+
             <div
               key={p._id}
               className="bg-white/90 backdrop-blur-xl p-4 rounded-3xl shadow-lg"
             >
+
               <img
                 src={
-                  p.images?.[0] ||
-                  "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
+                  p.images?.[0]
+                    ? p.images[0].startsWith(
+                        "http"
+                      )
+                      ? p.images[0]
+                      : `${BASE_URL}/${p.images[0]}`
+                    : "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
                 }
                 alt={p.name}
                 className="h-52 w-full object-cover rounded-2xl mb-4"
               />
 
               <h4 className="font-semibold text-lg">
+
                 {p.name}
+
               </h4>
 
               <p className="text-gray-500 mb-1">
+
                 ₹
                 {Number(
                   p.price
                 ).toLocaleString(
                   "en-IN"
                 )}
+
               </p>
 
               <p className="text-sm text-gray-400 mb-4 capitalize">
+
                 {p.category} /{" "}
                 {p.subCategory}
+
               </p>
 
               <div className="flex gap-3">
+
                 <button
                   onClick={() =>
                     handleEdit(p)
@@ -560,17 +847,25 @@ const Vendor = () => {
 
                 <button
                   onClick={() =>
-                    handleDelete(p._id)
+                    handleDelete(
+                      p._id
+                    )
                   }
                   className="flex-1 py-2 rounded-xl bg-red-100 text-red-600"
                 >
                   Delete
                 </button>
+
               </div>
+
             </div>
+
           ))}
+
         </div>
+
       </div>
+
     </div>
   );
 };
