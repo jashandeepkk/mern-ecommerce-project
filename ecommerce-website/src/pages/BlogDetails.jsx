@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getBlogById, getBlogs } from "../api/blogs";
-
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
 const BlogDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -52,11 +53,20 @@ const BlogDetails = () => {
     <div className="bg-gray-50 min-h-screen">
 
       <div className="relative">
-        <img
-          src={blog.image}
-          alt={blog.title}
-          className="w-full h-[300px] md:h-[420px] object-cover"
-        />
+      <img
+  src={
+    blog.image?.startsWith("http")
+      ? blog.image
+      : `${BASE_URL}${blog.image}`
+  }
+  alt={blog.title}
+  className="w-full h-[300px] md:h-[420px] object-cover"
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src =
+      "https://dummyimage.com/1200x600/cccccc/000000&text=No+Image";
+  }}
+/>
 
         <div className="absolute inset-0 bg-black/40 flex items-end">
           <div className="p-6 md:p-10 text-white max-w-4xl">
@@ -290,11 +300,20 @@ const BlogDetails = () => {
     className="flex gap-3 cursor-pointer group"
   >
 
-    <img
-      src={r.image}
-      alt={r.title}
-      className="w-16 h-14 object-cover rounded-lg"
-    />
+   <img
+  src={
+    r.image?.startsWith("http")
+      ? r.image
+      : `${BASE_URL}${r.image}`
+  }
+  alt={r.title}
+  className="w-16 h-14 object-cover rounded-lg"
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src =
+      "https://dummyimage.com/80x80/cccccc/000000&text=No+Image";
+  }}
+/>
 
     <p className="text-xs line-clamp-2 group-hover:text-blue-600">
       {r.title}
