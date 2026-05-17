@@ -98,9 +98,8 @@ const Register = () => {
     try {
       setLoading(true);
 
-      const { data } =
-        await axios.post(
-          "return `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/auth/register",
+    const { data } = await axios.post(
+  "https://mern-ecommerce-project-rtjp.onrender.com/api/auth/register",
           {
             name,
             email,

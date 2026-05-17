@@ -46,25 +46,22 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        "return `https://mern-ecommerce-project-rtjp.onrender.com/${img}`;/api/auth/login",
-        {
-          method: "POST",
+     const response = await fetch(
+  "https://mern-ecommerce-project-rtjp.onrender.com/api/auth/login",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      role,
+    }),
+  }
+);
 
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify({
-            email,
-            password,
-            role,
-          }),
-        }
-      );
-
-      const data = await response.json();
+const data = await response.json();
 
       if (!response.ok) {
         alert(
