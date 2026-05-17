@@ -21,7 +21,7 @@ const BlogDetails = () => {
         const blogs = await getBlogs();
         setRelated(
           blogs
-            .filter((b) => b.id !== id)
+            .filter((b) => String(b.id) !== String(id))
             .slice(0, 4)
         );
 
@@ -291,11 +291,11 @@ const BlogDetails = () => {
 
             <div className="space-y-3">
 
-              {related.map((r) => (
+             {related.map((r) => (
   <div
-    key={r.id}
+    key={r.id || r._id}
     onClick={() =>
-      navigate(`/blog/${r.id}`)
+      navigate(`/blog/${r.id || r._id}`)
     }
     className="flex gap-3 cursor-pointer group"
   >

@@ -11,7 +11,7 @@ const BlogCard = ({ blog }) => {
   return (
     <div
       onClick={() =>
- navigate(`/blog/${blog._id}`)
+ navigate(`/blog/${blog.id}`)
 }
       className="group cursor-pointer bg-white rounded-2xl border border-gray-100 hover:shadow-lg transition duration-300 overflow-hidden"
     >
