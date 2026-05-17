@@ -1,51 +1,83 @@
-const BLOG_API = "https://mern-ecommerce-project-rtjp.onrender.com";
+const BLOG_API =
+  "https://mern-ecommerce-project-rtjp.onrender.com/api/blogs";
 
 export const getBlogs = async () => {
-  const res = await fetch(BLOG_API);
+  try {
+    const res = await fetch(BLOG_API);
 
-  const data = await res.json();
+    if (!res.ok) {
+      throw new Error("Failed to fetch blogs");
+    }
 
-  return data.map((item) => ({
-    id: item._id,
+    const data = await res.json();
 
-    title: item.title,
-    category: item.category,
-    content: item.content,
+    return data.map((item) => ({
+      id: item._id,
 
-    image: `https://mern-ecommerce-project-rtjp.onrender.com/${item.image}`,
+      title: item.title,
+      category: item.category,
+      content: item.content,
 
-    date: "Latest",
-  }));
+      image: item.image?.startsWith("http")
+        ? item.image
+        : `${BLOG_API.replace("/api/blogs", "")}/${item.image}`,
+
+      date: item.createdAt
+        ? new Date(item.createdAt).toLocaleDateString()
+        : "Latest",
+    }));
+  } catch (error) {
+    console.log("BLOG FETCH ERROR:", error);
+    return [];
+  }
 };
 
 export const getBlogById = async (id) => {
-  const res = await fetch(`${BLOG_API}/${id}`);
+  try {
+    const res = await fetch(`${BLOG_API}/${id}`);
 
-  const item = await res.json();
+    if (!res.ok) {
+      throw new Error("Failed to fetch blog");
+    }
 
-  return {
-    id: item._id,
-    title: item.title,
-    category: item.category,
-    content: item.content,
+    const item = await res.json();
 
-    image: `https://mern-ecommerce-project-rtjp.onrender.com/${item.image}`,
+    return {
+      id: item._id,
 
-    date: "Latest",
+      title: item.title,
+      category: item.category,
+      content: item.content,
 
-    products: [
-      {
-        id: item._id,
-        title: item.title,
-        price: 999,
-        thumbnail: `https://mern-ecommerce-project-rtjp.onrender.com/${item.image}`,
+      image: item.image?.startsWith("http")
+        ? item.image
+        : `${BLOG_API.replace("/api/blogs", "")}/${item.image}`,
+
+      date: item.createdAt
+        ? new Date(item.createdAt).toLocaleDateString()
+        : "Latest",
+
+      products: [
+        {
+          id: item._id,
+          title: item.title,
+          price: 999,
+
+          thumbnail: item.image?.startsWith("http")
+            ? item.image
+            : `${BLOG_API.replace("/api/blogs", "")}/${item.image}`,
+        },
+      ],
+
+      author: {
+        name: "Cartify Team",
+        bio: "Helping you shop smarter 🛒",
+        avatar: "https://i.pravatar.cc/100?img=3",
       },
-    ],
+    };
+  } catch (error) {
+    console.log("BLOG BY ID ERROR:", error);
 
-    author: {
-      name: "Cartify Team",
-      bio: "Helping you shop smarter 🛒",
-      avatar: "https://i.pravatar.cc/100?img=3",
-    },
-  };
+    return null;
+  }
 };
