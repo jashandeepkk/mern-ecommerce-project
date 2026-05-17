@@ -22,52 +22,50 @@ const Track = () => {
     useState("");
 
   const handleTrack = async () => {
-    try {
-      setError("");
-      setOrder(null);
+  try {
+    setError("");
+    setOrder(null);
 
-      const token =
-        localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-      if (!token) {
-        setError("Please login first");
-        return;
-      }
-
-      const response = await fetch(
-        `${BASE_URL}/api/orders/${orderId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-        setError(
-          data.message ||
-            "Order not found"
-        );
-        return;
-      }
-
-      if (data.success && data.order) {
-  setOrder(data.order);
-} else {
-  setError("No order found");
-}
-
-    } catch (err) {
-      console.log(err);
-
-      setError(
-        "Something went wrong"
-      );
+    if (!token) {
+      setError("Please login first");
+      return;
     }
-  };
+
+    const response = await fetch(
+      `${BASE_URL}/api/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("TRACK RESPONSE:", data);
+
+    if (!response.ok) {
+      setError(
+        data.message || "Order not found"
+      );
+      return;
+    }
+
+    /* FIX HERE */
+    if (data.success && data.order) {
+      setOrder(data.order);
+    } else {
+      setError("No order found");
+    }
+
+  } catch (err) {
+    console.log(err);
+
+    setError("Something went wrong");
+  }
+};
 
   const getStep = () => {
     if (!order) return 1;
