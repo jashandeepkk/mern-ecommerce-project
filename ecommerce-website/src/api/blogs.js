@@ -1,5 +1,7 @@
-const BLOG_API =
-  "https://mern-ecommerce-project-rtjp.onrender.com/api/blogs";
+const BASE_URL =
+  "https://mern-ecommerce-project-rtjp.onrender.com";
+
+const BLOG_API = `${BASE_URL}/api/blogs`;
 
 export const getBlogs = async () => {
   try {
@@ -20,7 +22,7 @@ export const getBlogs = async () => {
 
       image: item.image?.startsWith("http")
         ? item.image
-        : `${BLOG_API.replace("/api/blogs", "")}/${item.image}`,
+        : `${BASE_URL}/${item.image.replace(/^\/+/, "")}`,
 
       date: item.createdAt
         ? new Date(item.createdAt).toLocaleDateString()
@@ -51,7 +53,7 @@ export const getBlogById = async (id) => {
 
       image: item.image?.startsWith("http")
         ? item.image
-        : `${BLOG_API.replace("/api/blogs", "")}/${item.image}`,
+        : `${BASE_URL}/${item.image.replace(/^\/+/, "")}`,
 
       date: item.createdAt
         ? new Date(item.createdAt).toLocaleDateString()
@@ -65,7 +67,7 @@ export const getBlogById = async (id) => {
 
           thumbnail: item.image?.startsWith("http")
             ? item.image
-            : `${BLOG_API.replace("/api/blogs", "")}/${item.image}`,
+            : `${BASE_URL}/${item.image.replace(/^\/+/, "")}`,
         },
       ],
 
