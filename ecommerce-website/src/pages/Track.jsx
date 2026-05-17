@@ -22,50 +22,61 @@ const Track = () => {
     useState("");
 
   const handleTrack = async () => {
-  try {
-    setError("");
-    setOrder(null);
+    try {
+      setError("");
+      setOrder(null);
 
-    const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token");
 
-    if (!token) {
-      setError("Please login first");
-      return;
-    }
-
-    const response = await fetch(
-      `${BASE_URL}/api/orders/${orderId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      if (!token) {
+        setError("Please login first");
+        return;
       }
-    );
 
-    const data = await response.json();
-
-    console.log("TRACK RESPONSE:", data);
-
-    if (!response.ok) {
-      setError(
-        data.message || "Order not found"
+      const response = await fetch(
+        `${BASE_URL}/api/orders/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      return;
+
+      const data =
+        await response.json();
+
+      console.log(
+        "TRACK RESPONSE:",
+        data
+      );
+
+      if (!response.ok) {
+        setError(
+          data.message ||
+            "Order not found"
+        );
+        return;
+      }
+
+      if (
+        data.success &&
+        data.order
+      ) {
+        setOrder(data.order);
+      } else {
+        setError("No order found");
+      }
+
+    } catch (err) {
+
+      console.log(err);
+
+      setError(
+        "Something went wrong"
+      );
     }
-
-    /* FIX HERE */
-    if (data.success && data.order) {
-      setOrder(data.order);
-    } else {
-      setError("No order found");
-    }
-
-  } catch (err) {
-    console.log(err);
-
-    setError("Something went wrong");
-  }
-};
+  };
 
   const getStep = () => {
     if (!order) return 1;
@@ -111,9 +122,8 @@ const Track = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] py-10">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
 
-        {/* HERO */}
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
 
         <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] rounded-3xl p-8 md:p-12 text-white mb-10 relative overflow-hidden">
 
@@ -143,7 +153,9 @@ const Track = () => {
                   placeholder="Enter Order ID"
                   value={orderId}
                   onChange={(e) =>
-                    setOrderId(e.target.value)
+                    setOrderId(
+                      e.target.value
+                    )
                   }
                   className="w-full pl-12 pr-4 py-4 rounded-xl text-black outline-none border border-transparent focus:border-yellow-400"
                 />
@@ -173,12 +185,8 @@ const Track = () => {
 
         </div>
 
-        {/* ORDER DETAILS */}
-
         {order && (
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-
-            {/* HEADER */}
 
             <div className="p-6 md:p-8 border-b bg-gray-50">
 
@@ -262,8 +270,6 @@ const Track = () => {
 
             </div>
 
-            {/* TRACKER */}
-
             <div className="p-6 md:p-10">
 
               <h3 className="text-xl font-bold text-[#0f172a] mb-10">
@@ -330,8 +336,6 @@ const Track = () => {
 
             </div>
 
-            {/* ORDER ITEMS */}
-
             <div className="border-t p-6 md:p-8">
 
               <div className="flex items-center gap-3 mb-6">
@@ -370,11 +374,10 @@ const Track = () => {
 
                           <img
                             src={
-                              item.image?.startsWith(
-                                "http"
-                              )
-                                ? item.image
-                                : `${BASE_URL}/${item.image}`
+                              item.image ||
+                              item.product?.image ||
+                              item.product?.images?.[0] ||
+                              "https://dummyimage.com/80x80/cccccc/000000&text=No+Image"
                             }
                             alt={item.name}
                             className="w-full h-full object-contain"
@@ -432,6 +435,7 @@ const Track = () => {
         )}
 
       </div>
+
     </div>
   );
 };
