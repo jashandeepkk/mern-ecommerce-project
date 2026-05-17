@@ -54,13 +54,7 @@ const BlogDetails = () => {
 
       <div className="relative">
       <img
-  src={
-    blog.image?.startsWith("http")
-      ? blog.image
-      : `${BASE_URL}/${blog.image
-          .replace(/^\/+/, "")
-          .replace(/^uploads/, "uploads")}`
-  }
+ src={blog.image}
   alt={blog.title}
   className="w-full h-[300px] md:h-[420px] object-cover"
   onError={(e) => {

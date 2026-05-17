@@ -19,12 +19,8 @@ const BlogCard = ({ blog }) => {
       {/* IMAGE */}
       <div className="relative h-[250px] bg-gray-100 flex items-center justify-center overflow-hidden">
 
-  <img
- src={
-  blog.image?.startsWith("http")
-    ? blog.image
-    : `${BASE_URL}/${blog.image}`
-}
+ <img
+  src={blog.image}
   alt={blog.title}
   onError={(e) => {
     e.target.onerror = null;
