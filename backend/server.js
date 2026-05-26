@@ -12,7 +12,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
-
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 import { protect } from "./middleware/authMiddleware.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -47,7 +47,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
-
+app.use("/api/payments", paymentRoutes);
 app.get("/", (req, res) => {
   res.send("API Running...");
 });

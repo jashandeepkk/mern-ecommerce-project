@@ -11,7 +11,8 @@ const Checkout = () => {
     city: "",
     pincode: "",
   });
-
+const [paymentMethod, setPaymentMethod] =
+  useState("COD");
   const navigate = useNavigate();
 
 useEffect(() => {
@@ -85,7 +86,190 @@ useEffect(() => {
         e.target.value,
     });
   };
+const handleOnlinePayment = async () => {
+  try {
 
+    if (
+      !form.name ||
+      !form.phone ||
+      !form.address ||
+      !form.city ||
+      !form.pincode
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const token =
+      localStorage.getItem("token");
+
+    const response = await fetch(
+      "https://mern-ecommerce-project-rtjp.onrender.com/api/payments/create-order",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          amount: finalTotal,
+        }),
+      }
+    );
+
+    const data =
+      await response.json();
+
+    const options = {
+
+      key: "rzp_test_SttRhgeNwpCSZL",
+
+      amount: data.amount,
+
+      currency: data.currency,
+
+      name:
+        "MERN Ecommerce Project",
+
+      description:
+        "Order Payment",
+
+      order_id: data.id,
+
+      handler: async function (
+        response
+      ) {
+
+        const orderData = {
+
+          orderItems: cart.map(
+            (item) => ({
+              product:
+                item.productId,
+
+              name: item.title,
+
+              image: item.image,
+
+              price: Number(
+                item.price
+              ),
+
+              qty: Number(
+                item.qty
+              ),
+
+              vendor: null,
+            })
+          ),
+
+          shippingAddress: {
+            fullName:
+              form.name,
+
+            phone:
+              form.phone,
+
+            address:
+              form.address,
+
+            city: form.city,
+
+            pincode:
+              form.pincode,
+          },
+
+          totalPrice:
+            Number(finalTotal),
+
+          paymentMethod:
+            "Razorpay",
+
+          paymentResult: {
+            id:
+              response.razorpay_payment_id,
+            status:
+              "Paid",
+          },
+        };
+
+        const orderResponse =
+          await fetch(
+            "https://mern-ecommerce-project-rtjp.onrender.com/api/orders",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                Authorization:
+                  `Bearer ${token}`,
+              },
+
+              body: JSON.stringify(
+                orderData
+              ),
+            }
+          );
+
+        const order =
+          await orderResponse.json();
+
+        localStorage.setItem(
+          "latestOrderId",
+          order._id
+        );
+
+        await fetch(
+          "https://mern-ecommerce-project-rtjp.onrender.com/api/cart/clear",
+          {
+            method: "DELETE",
+
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+        alert(
+          "Payment Successful"
+        );
+
+        navigate("/success");
+      },
+
+      prefill: {
+        name: form.name,
+
+        contact:
+          form.phone,
+      },
+
+      theme: {
+        color: "#000000",
+      },
+    };
+
+    const razorpay =
+      new window.Razorpay(
+        options
+      );
+
+    razorpay.open();
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert(
+      "Payment Failed"
+    );
+  }
+};
   const handleOrder = async () => {
     if (
       !form.name ||
@@ -280,30 +464,38 @@ useEffect(() => {
           />
 
           <div className="mt-4">
-            <h4 className="font-medium mb-2">
-              Payment Method
-            </h4>
+  <h4 className="font-medium mb-2">
+    Payment Method
+  </h4>
 
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="payment"
-                defaultChecked
-              />
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="payment"
+      checked={paymentMethod === "COD"}
+      onChange={() =>
+        setPaymentMethod("COD")
+      }
+    />
 
-              Cash on Delivery
-            </label>
+    Cash on Delivery
+  </label>
 
-            <label className="flex items-center gap-2 mt-2">
-              <input
-                type="radio"
-                name="payment"
-              />
+  <label className="flex items-center gap-2 mt-2">
+    <input
+      type="radio"
+      name="payment"
+      checked={
+        paymentMethod === "ONLINE"
+      }
+      onChange={() =>
+        setPaymentMethod("ONLINE")
+      }
+    />
 
-              UPI / Card
-              (Coming Soon)
-            </label>
-          </div>
+    Razorpay / UPI / Card
+  </label>
+</div>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border h-fit">
           <h3 className="font-semibold mb-4">
@@ -366,13 +558,23 @@ useEffect(() => {
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleOrder}
-            className="mt-5 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800"
-          >
-            Place Order
-          </button>
+         <button
+  type="button"
+  onClick={() => {
+    if (
+      paymentMethod === "ONLINE"
+    ) {
+      handleOnlinePayment();
+    } else {
+      handleOrder();
+    }
+  }}
+  className="mt-5 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800"
+>
+  {paymentMethod === "ONLINE"
+    ? "Pay Now"
+    : "Place Order"}
+</button>
         </div>
       </div>
     </div>
