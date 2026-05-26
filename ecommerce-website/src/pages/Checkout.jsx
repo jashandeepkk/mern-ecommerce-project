@@ -113,11 +113,12 @@ const res = await fetch(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({
-  amount: Math.round(Number(finalTotal) * 100)
+   
+ body: JSON.stringify({
+  amount: Math.round(finalTotal * 100)
 }),
-  }
-);
+}),
+  
 
     const orderData = await res.json();
 

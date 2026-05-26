@@ -15,7 +15,7 @@ router.post("/create-order", async (req, res) => {
     }
 
     const options = {
-      amount: Math.round(Number(amount) * 100),
+      amount: Number(amount),
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
