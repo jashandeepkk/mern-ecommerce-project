@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/create-order", async (req, res) => {
   try {
-    const { amount } = req.body;
+    let { amount } = req.body; // ✅ use let
 
     if (!amount || amount <= 0) {
       return res.status(400).json({
@@ -14,8 +14,11 @@ router.post("/create-order", async (req, res) => {
       });
     }
 
+    // ✅ convert rupees → paise
+    amount = Math.round(Number(amount) * 100);
+
     const options = {
-      amount: Number(amount),
+      amount, // already converted
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };

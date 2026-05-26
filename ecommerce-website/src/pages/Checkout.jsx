@@ -115,9 +115,10 @@ const res = await fetch(
     },
    
  body: JSON.stringify({
-  amount: Math.round(finalTotal * 100)
+  amount: finalTotal
 }),
-}),
+}
+);
   
 
     const orderData = await res.json();
