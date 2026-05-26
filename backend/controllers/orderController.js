@@ -1,118 +1,65 @@
 import Order from "../models/Order.js";
-
+import razorpay from "../config/razorpay.js";
 /* ================= CREATE ORDER ================= */
 
-export const createOrder = async (
-  req,
-  res
-) => {
+export const createOrder = async (req, res) => {
   try {
-    const {
-      orderItems,
-      totalPrice,
-      shippingAddress,
-    } = req.body;
-
-    if (
-      !orderItems ||
-      orderItems.length === 0
-    ) {
+    const { orderItems, totalPrice, shippingAddress } = req.body;
+if (!totalPrice || totalPrice <= 0) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid total price",
+  });
+}
+    if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({
         success: false,
         message: "No order items",
       });
     }
 
+    // ✅ STEP 1: CREATE RAZORPAY ORDER FIRST
+    const razorpayOrder = await razorpay.orders.create({
+  amount: Math.round(Number(totalPrice) * 100),
+  currency: "INR",
+  receipt: `receipt_${Date.now()}`,
+});
+
+    // ✅ STEP 2: SAVE ORDER IN DB
     const order = await Order.create({
       user: req.user?.id,
-
       items: orderItems.map((item) => ({
-        product:
-          item.product?._id ||
-          item.product ||
-          item._id,
-
-        name:
-          item.name ||
-          item.product?.name ||
-          "",
-
-        image:
-          item.images?.[0] ||
-          item.image ||
-          "",
-
-        quantity:
-          item.quantity ||
-          item.qty ||
-          1,
-
-        price:
-          item.price || 0,
-
-        vendor:
-          item.vendor?._id ||
-          item.vendor ||
-          null,
+        product: item.product?._id || item.product || item._id,
+        name: item.name || item.product?.name || "",
+        image: item.images?.[0] || item.image || "",
+        quantity: item.quantity || item.qty || 1,
+        price: item.price || 0,
+        vendor: item.vendor?._id || item.vendor || null,
       })),
 
       totalPrice,
-
       shippingAddress,
-
       status: "Pending",
+
+      // 🔥 ADD THIS IMPORTANT FIELD
+      razorpayOrderId: razorpayOrder.id,
     });
-
-    /* AUTO STATUS UPDATE */
-
-    setTimeout(async () => {
-      await Order.findByIdAndUpdate(
-        order._id,
-        {
-          status: "Processing",
-        }
-      );
-    }, 30000);
-
-    setTimeout(async () => {
-      await Order.findByIdAndUpdate(
-        order._id,
-        {
-          status: "Shipped",
-        }
-      );
-    }, 60000);
-
-    setTimeout(async () => {
-      await Order.findByIdAndUpdate(
-        order._id,
-        {
-          status: "Delivered",
-        }
-      );
-    }, 90000);
 
     res.status(201).json({
       success: true,
-      message:
-        "Order placed successfully",
+      message: "Order placed successfully",
       order,
+      razorpayOrder, // 🔥 send to frontend
     });
 
   } catch (error) {
-
-    console.log(
-      "CREATE ORDER ERROR:",
-      error
-    );
-
+    console.log("CREATE ORDER ERROR:", error);
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
-
 /* ================= GET ALL ORDERS ================= */
 
 export const getOrders = async (

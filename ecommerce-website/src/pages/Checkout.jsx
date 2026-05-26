@@ -88,7 +88,6 @@ useEffect(() => {
   };
 const handleOnlinePayment = async () => {
   try {
-
     if (
       !form.name ||
       !form.phone ||
@@ -96,157 +95,106 @@ const handleOnlinePayment = async () => {
       !form.city ||
       !form.pincode
     ) {
-      alert("Please fill all fields");
-      return;
+      return alert("Please fill all fields");
     }
 
-    const token =
-      localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-    const response = await fetch(
-      "https://mern-ecommerce-project-rtjp.onrender.com/api/payments/create-order",
+    // 1. Create Razorpay order from backend
+    const res = await fetch(
+      "https://mern-ecommerce-project-rtjp.onrender.com/api/payment/create-order",
       {
         method: "POST",
-
         headers: {
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-
         body: JSON.stringify({
           amount: finalTotal,
         }),
       }
     );
 
-    const data =
-      await response.json();
+    const orderData = await res.json();
 
+    if (!res.ok) {
+      return alert(orderData.message || "Failed to create payment order");
+    }
+
+    // 2. Razorpay options
     const options = {
-
       key: "rzp_test_SttRhgeNwpCSZL",
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "MERN Ecommerce Project",
+      order_id: orderData.id,
 
-      amount: data.amount,
-
-      currency: data.currency,
-
-      name:
-        "MERN Ecommerce Project",
-
-      description:
-        "Order Payment",
-
-      order_id: data.id,
-
-      handler: async function (
-        response
-      ) {
-
-        const orderData = {
-
-          orderItems: cart.map(
-            (item) => ({
-              product:
-                item.productId,
-
+      handler: async function (response) {
+        try {
+          // 3. Save order AFTER payment success
+          const orderPayload = {
+            orderItems: cart.map((item) => ({
+              product: item.productId,
               name: item.title,
-
               image: item.image,
+              price: Number(item.price),
+              qty: Number(item.qty),
+            })),
+            shippingAddress: {
+              fullName: form.name,
+              phone: form.phone,
+              address: form.address,
+              city: form.city,
+              pincode: form.pincode,
+            },
+            totalPrice: Number(finalTotal),
+            paymentMethod: "Razorpay",
+            paymentResult: {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              status: "Paid",
+            },
+          };
 
-              price: Number(
-                item.price
-              ),
-
-              qty: Number(
-                item.qty
-              ),
-
-              vendor: null,
-            })
-          ),
-
-          shippingAddress: {
-            fullName:
-              form.name,
-
-            phone:
-              form.phone,
-
-            address:
-              form.address,
-
-            city: form.city,
-
-            pincode:
-              form.pincode,
-          },
-
-          totalPrice:
-            Number(finalTotal),
-
-          paymentMethod:
-            "Razorpay",
-
-          paymentResult: {
-            id:
-              response.razorpay_payment_id,
-            status:
-              "Paid",
-          },
-        };
-
-        const orderResponse =
-          await fetch(
+          const orderRes = await fetch(
             "https://mern-ecommerce-project-rtjp.onrender.com/api/orders",
             {
               method: "POST",
-
               headers: {
-                "Content-Type":
-                  "application/json",
-
-                Authorization:
-                  `Bearer ${token}`,
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
               },
-
-              body: JSON.stringify(
-                orderData
-              ),
+              body: JSON.stringify(orderPayload),
             }
           );
 
-        const order =
-          await orderResponse.json();
+          const order = await orderRes.json();
 
-        localStorage.setItem(
-          "latestOrderId",
-          order._id
-        );
+          localStorage.setItem("latestOrderId", order._id);
 
-        await fetch(
-          "https://mern-ecommerce-project-rtjp.onrender.com/api/cart/clear",
-          {
-            method: "DELETE",
+          // 4. Clear cart
+          await fetch(
+            "https://mern-ecommerce-project-rtjp.onrender.com/api/cart/clear",
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-        alert(
-          "Payment Successful"
-        );
-
-        navigate("/success");
+          alert("Payment Successful");
+          navigate("/success");
+        } catch (err) {
+          console.log(err);
+          alert("Order saving failed");
+        }
       },
 
       prefill: {
         name: form.name,
-
-        contact:
-          form.phone,
+        contact: form.phone,
       },
 
       theme: {
@@ -254,20 +202,11 @@ const handleOnlinePayment = async () => {
       },
     };
 
-    const razorpay =
-      new window.Razorpay(
-        options
-      );
-
+    const razorpay = new window.Razorpay(options);
     razorpay.open();
-
   } catch (error) {
-
     console.log(error);
-
-    alert(
-      "Payment Failed"
-    );
+    alert("Payment Failed");
   }
 };
   const handleOrder = async () => {

@@ -1,9 +1,6 @@
-import express from "express";
 import razorpay from "../config/razorpay.js";
 
-const router = express.Router();
-
-router.post("/create-order", async (req, res) => {
+export const createRazorpayOrder = async (req, res) => {
   try {
     const { amount } = req.body;
 
@@ -22,19 +19,16 @@ router.post("/create-order", async (req, res) => {
 
     const order = await razorpay.orders.create(options);
 
-    res.status(200).json({
+    res.json({
       id: order.id,
       amount: order.amount,
       currency: order.currency,
     });
 
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
-});
-
-export default router;
+};
