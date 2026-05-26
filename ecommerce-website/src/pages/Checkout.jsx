@@ -102,7 +102,8 @@ const handleOnlinePayment = async () => {
     }
 
     const token = localStorage.getItem("token");
-
+console.log("FINAL TOTAL:", finalTotal);
+console.log("RAZORPAY AMOUNT:", finalTotal * 100);
    // 1. Create Razorpay order from backend
 const res = await fetch(
   "https://mern-ecommerce-project-rtjp.onrender.com/api/payments/create-order",
@@ -113,7 +114,7 @@ const res = await fetch(
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-  amount: finalTotal * 100,
+  amount: Math.round(Number(finalTotal) * 100)
 }),
   }
 );
