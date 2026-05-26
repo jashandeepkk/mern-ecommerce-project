@@ -88,6 +88,9 @@ useEffect(() => {
   };
 const handleOnlinePayment = async () => {
   try {
+    if (cart.length === 0) {
+  return alert("Cart is empty");
+}
     if (
       !form.name ||
       !form.phone ||
@@ -100,20 +103,20 @@ const handleOnlinePayment = async () => {
 
     const token = localStorage.getItem("token");
 
-    // 1. Create Razorpay order from backend
-    const res = await fetch(
-      "https://mern-ecommerce-project-rtjp.onrender.com/api/payment/create-order",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          amount: finalTotal,
-        }),
-      }
-    );
+   // 1. Create Razorpay order from backend
+const res = await fetch(
+  "https://mern-ecommerce-project-rtjp.onrender.com/api/payments/create-order",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+  amount: finalTotal * 100,
+}),
+  }
+);
 
     const orderData = await res.json();
 
